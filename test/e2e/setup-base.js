@@ -54,4 +54,7 @@ function setup (context, desired, opts = {}, envOverrides = false, needsNewServe
   return session;
 }
 
+const MOCHA_TIMEOUT = process.env.TRAVIS ? 480000 : 90000;
+
+export { setup, MOCHA_TIMEOUT };
 export default setup;

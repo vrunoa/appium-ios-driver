@@ -1,11 +1,12 @@
 import desired from './desired';
-import setup from '../../setup-base';
+import { setup, MOCHA_TIMEOUT } from '../../setup-base';
 import env from '../../helpers/env';
 import { loadWebView, spinWait } from '../../helpers/webview';
 
 
 describe('safari - webview - special capabilities', function () {
-  this.timeout(120 * 1000);
+  this.timeout(MOCHA_TIMEOUT);
+  
   describe('safariIgnoreFraudWarning', function () {
     describe('true', function () {
       let specialCaps = Object.assign({}, desired);

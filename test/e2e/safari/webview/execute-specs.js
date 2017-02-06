@@ -1,7 +1,8 @@
 /* globals expect */
 import desired from './desired';
-import setup from '../../setup-base';
+import { setup, MOCHA_TIMEOUT } from '../../setup-base';
 import { loadWebView } from '../../helpers/webview';
+
 
 const SCROLL_INTO_VIEW = `return arguments[0].scrollIntoView(true);`;
 const GET_RIGHT_INNERHTML = `return document.body.innerHTML.indexOf('I am some page content') > 0`;
@@ -9,6 +10,8 @@ const GET_WRONG_INNERHTML = `return document.body.innerHTML.indexOf('I am not so
 const GET_ELEM_BY_TAGNAME = `return document.getElementsByTagName('a');`;
 
 describe('safari - webview - execute', function () {
+  this.timeout(MOCHA_TIMEOUT);
+  
   const driver = setup(this, desired, {noReset: true}, false, true).driver;
   before(async () => await loadWebView(desired, driver));
 

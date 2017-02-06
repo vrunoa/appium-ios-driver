@@ -1,11 +1,13 @@
 /* globals expect */
 import desired from './desired';
-import setup from '../../setup-base';
+import { setup, MOCHA_TIMEOUT } from '../../setup-base';
 import { loadWebView, spinTitle, spinWait } from '../../helpers/webview';
 import B from 'bluebird';
 
 
 describe('safari - webview - basics', function () {
+  this.timeout(MOCHA_TIMEOUT);
+  
   const driver = setup(this, desired, {noReset: true}).driver;
 
   describe('context', function () {

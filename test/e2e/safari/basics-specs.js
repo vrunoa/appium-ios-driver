@@ -1,7 +1,10 @@
-import setup from "../setup-base";
+import { setup, MOCHA_TIMEOUT } from "../setup-base";
 import env from '../helpers/env';
 
+
 describe('safari - basics @skip-real-device', function () {
+  this.timeout(MOCHA_TIMEOUT);
+  
   if (!(env.IOS8 || env.IOS9) && env.IOS80) {
     return describe('default init', function () {
       const driver = setup(this, { browserName: 'safari' }).driver;

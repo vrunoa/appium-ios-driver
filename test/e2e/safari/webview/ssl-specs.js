@@ -1,12 +1,14 @@
 import desired from './desired';
 import B from 'bluebird';
 import https from 'https';
-import setup from '../../setup-base';
+import { setup, MOCHA_TIMEOUT } from '../../setup-base';
 
 
 const pem = B.promisifyAll(require('pem'));
 
-describe('When accessing an HTTPS encrypted site in Safari', async function () {
+describe('When accessing an HTTPS encrypted site in Safari', function () {
+  this.timeout(MOCHA_TIMEOUT);
+
   let sslServer;
 
   before(async function () {

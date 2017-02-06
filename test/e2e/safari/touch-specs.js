@@ -1,4 +1,4 @@
-import setup from "../setup-base";
+import { setup, MOCHA_TIMEOUT } from "../setup-base";
 import env from '../helpers/env';
 import B from 'bluebird';
 
@@ -7,6 +7,8 @@ import B from 'bluebird';
  * touch command doesn't work
  */
 describe.skip('touch', function () {
+  this.timeout(MOCHA_TIMEOUT);
+  
   const driver = setup(this, {
     browserName: "safari"
   }, {

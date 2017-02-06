@@ -1,8 +1,11 @@
 import desired from './desired';
-import setup from '../../setup-base';
+import { setup, MOCHA_TIMEOUT } from '../../setup-base';
 import { loadWebView } from '../../helpers/webview';
 
+
 describe('safari - webview - alerts @skip-real-device', function () {
+  this.timeout(MOCHA_TIMEOUT);
+  
   const driver = setup(this, desired, {noReset: true}).driver;
   beforeEach(async () => await loadWebView(desired, driver));
 
