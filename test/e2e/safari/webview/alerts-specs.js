@@ -1,59 +1,64 @@
-import desired from './desired';
-import setup from '../../setup-base';
 import { loadWebView } from '../../helpers/webview';
-import { MOCHA_SAFARI_TIMEOUT } from '../../helpers/session';
+import { initSession, deleteSession, MOCHA_TIMEOUT } from '../../helpers/session2';
+import { SAFARI_CAPS } from '../../desired';
 
 
 describe('safari - webview - alerts @skip-real-device', function () {
-  this.timeout(MOCHA_SAFARI_TIMEOUT);
+  this.timeout(MOCHA_TIMEOUT);
 
-  const driver = setup(this, desired, {noReset: true}).driver;
-  beforeEach(async () => await loadWebView(desired, driver));
+  let driver;
+  before(async () => {
+    driver = await initSession(SAFARI_CAPS);
+  });
+  after(async () => {
+    await deleteSession();
+  });
+  beforeEach(async () => await loadWebView(SAFARI_CAPS, driver));
 
   it('should accept alert', async () => {
-    let el = await driver.findElement('id', 'alert1');
-    await driver.click(el);
-    await driver.postAcceptAlert();
+    let el = await driver.elementById('alert1');
+    await el.click();
+    await driver.acceptAlert();
     (await driver.title()).should.include('I am a page title');
   });
 
   it('should dismiss alert', async () => {
-    let el = await driver.findElement('id', 'alert1');
-    await driver.click(el);
-    await driver.postDismissAlert();
+    let el = await driver.elementById('alert1');
+    await el.click();
+    await driver.dismissAlert();
     (await driver.title()).should.include('I am a page title');
   });
 
   it('should get text of alert', async () => {
-    let el = await driver.findElement('id', 'alert1');
-    await driver.click(el);
-    (await driver.getAlertText()).should.include('I am an alert');
-    await driver.postDismissAlert();
+    let el = await driver.elementById('alert1');
+    await el.click();
+    (await driver.alertText()).should.include('I am an alert');
+    await driver.dismissAlert();
   });
 
   it('should not get text of alert that closed', async () => {
-    let el = await driver.findElement('id', 'alert1');
-    await driver.click(el);
-    await driver.postAcceptAlert();
-    return driver.getAlertText()
+    let el = await driver.elementById('alert1');
+    await el.click();
+    await driver.acceptAlert();
+    return driver.alertText()
       .should.be.rejectedWith(/An attempt was made to operate on a modal dialog when one was not open/);
   });
 
   it('should set text of prompt', async () => {
-    let el = await driver.findElement('id', 'prompt1');
-    await driver.click(el);
-    await driver.setAlertText('yes I do!');
-    await driver.postAcceptAlert();
+    let el = await driver.elementById('prompt1');
+    await el.click();
+    await driver.alertKeys('yes I do!');
+    await driver.acceptAlert();
 
-    el = await driver.findElement('id', 'promptVal');
+    el = await driver.elementById('promptVal');
     // TODO: avoiding flaky test case where value is 'yes I dO'.
-    (await driver.getAttribute('value', el)).toLowerCase().should.equal('yes i do!');
+    (await el.getAttribute('value')).toLowerCase().should.equal('yes i do!');
   });
 
   it('should fail to set text of alert', async () => {
-    let el = await driver.findElement('id', 'alert1');
-    await driver.click(el);
-    return driver.setAlertText('yes I do!')
+    let el = await driver.elementById('alert1');
+    await el.click();
+    return driver.alertKeys('yes I do!')
       .should.be.rejectedWith(/Tried to set text of an alert that wasn't a prompt/);
   });
 });

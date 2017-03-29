@@ -1,16 +1,17 @@
-import desired from './desired';
 import B from 'bluebird';
 import https from 'https';
-import setup from '../../setup-base';
-import { MOCHA_SAFARI_TIMEOUT } from '../../helpers/session';
+import { initSession, deleteSession, MOCHA_TIMEOUT } from '../../helpers/session2';
+import { SAFARI_CAPS } from '../../desired';
+
 
 const pem = B.promisifyAll(require('pem'));
 
 describe('When accessing an HTTPS encrypted site in Safari', function () {
-  this.timeout(MOCHA_SAFARI_TIMEOUT);
+  this.timeout(MOCHA_TIMEOUT);
 
   let sslServer;
-
+  let driver;
+  let desired = Object.assign({}, SAFARI_CAPS);
   before(async function () {
     // Create an HTTPS server with a random pem certificate
     let privateKey = await pem.createPrivateKeyAsync();
@@ -21,14 +22,15 @@ describe('When accessing an HTTPS encrypted site in Safari', function () {
       res.end('Arbitrary text');
     }).listen(9758);
     desired.customSSLCert = pemCertificate;
-  });
 
-  const driver = setup(this, desired, {noReset: true}).driver;
+    driver = await initSession(desired);
+  });
 
   after(async () => {
     if (sslServer) {
       await sslServer.close();
     }
+    await deleteSession();
   });
 
   it('should be able to access it as long the PEM certificate is provided as a capability', async () => {

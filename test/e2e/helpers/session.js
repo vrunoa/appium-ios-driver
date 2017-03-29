@@ -74,4 +74,5 @@ class Session {
 
 }
 
+
 export { Session, MOCHA_TIMEOUT, MOCHA_SAFARI_TIMEOUT };

@@ -28,7 +28,7 @@ async function loadWebView (desired, browser, urlToLoad, titleToSpin) {
     titleToSpin = uuid;
   }
   if (BROWSERS.indexOf(app) > -1) {
-    await browser.setUrl(urlToLoad);
+    await browser.get(urlToLoad);
     await B.delay(3000);
     return await spinTitle(titleToSpin, browser);
   }
@@ -39,7 +39,7 @@ async function loadWebView (desired, browser, urlToLoad, titleToSpin) {
 
   let url = await browser.url();
   if (url !== urlToLoad) {
-    await browser.setUrl(urlToLoad);
+    await browser.get(urlToLoad);
   }
 
   return await spinTitle(titleToSpin, browser);

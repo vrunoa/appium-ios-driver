@@ -1,8 +1,7 @@
 /* globals expect */
-import desired from './desired';
-import setup from '../../setup-base';
 import { loadWebView } from '../../helpers/webview';
-import { MOCHA_SAFARI_TIMEOUT } from '../../helpers/session';
+import { initSession, deleteSession, MOCHA_TIMEOUT } from '../../helpers/session2';
+import { SAFARI_CAPS } from '../../desired';
 
 
 const SCROLL_INTO_VIEW = `return arguments[0].scrollIntoView(true);`;
@@ -11,10 +10,16 @@ const GET_WRONG_INNERHTML = `return document.body.innerHTML.indexOf('I am not so
 const GET_ELEM_BY_TAGNAME = `return document.getElementsByTagName('a');`;
 
 describe('safari - webview - execute', function () {
-  this.timeout(MOCHA_SAFARI_TIMEOUT);
+  this.timeout(MOCHA_TIMEOUT);
 
-  const driver = setup(this, desired, {noReset: true}, false, true).driver;
-  before(async () => await loadWebView(desired, driver));
+  let driver;
+  before(async () => {
+    driver = await initSession(SAFARI_CAPS);
+  });
+  after(async () => {
+    await deleteSession();
+  });
+  beforeEach(async () => await loadWebView(SAFARI_CAPS, driver));
 
   describe('synchronous', function () {
     it('should bubble up javascript errors', async () => {
@@ -39,12 +44,12 @@ describe('safari - webview - execute', function () {
     });
 
     it('should convert selenium element arg to webview element', async () => {
-      let el = await driver.findElement('id', 'useragent');
+      let el = await driver.elementById('useragent');
       await driver.execute(SCROLL_INTO_VIEW, [el]);
     });
 
     it('should catch stale or undefined element as arg', async () => {
-      let el = await driver.findElement('id', 'useragent');
+      let el = await driver.elementById('useragent');
       return driver.execute(SCROLL_INTO_VIEW, [{'ELEMENT': (el.value + 1)}]).should.beRejected;
     });
 
@@ -68,12 +73,12 @@ describe('safari - webview - execute', function () {
     });
 
     it('should execute async javascript', async () => {
-      await driver.asyncScriptTimeout(1000);
+      await driver.setAsyncScriptTimeout(1000);
       (await driver.executeAsync(`arguments[arguments.length - 1](123);`)).should.be.equal(123);
     });
 
     it('should timeout when callback is not invoked', async () => {
-      await driver.asyncScriptTimeout(1000);
+      await driver.setAsyncScriptTimeout(1000);
       await driver.executeAsync(`return 1 + 2`).should.eventually.be.rejected;
     });
   });
