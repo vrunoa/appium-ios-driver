@@ -39,8 +39,9 @@ export default IosDriver;
 import IOSLog from './lib/device-log/ios-log';
 import IOSCrashLog from './lib/device-log/ios-crash-log';
 import IOSPerformanceLog from './lib/device-log/ios-performance-log';
+import SafariConsoleLog from './lib/device-log/safari-console-log';
 
-export { IOSLog, IOSCrashLog, IOSPerformanceLog };
+export { IOSLog, IOSCrashLog, IOSPerformanceLog, SafariConsoleLog };
 
 // app utils
 import * as appUtils from './lib/app-utils';
