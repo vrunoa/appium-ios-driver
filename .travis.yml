@@ -4,10 +4,10 @@ env:
     - MOCHA_INIT_TIMEOUT=600000
   matrix:
   # Run tests in parellel
-    - DEVICE=ios93 TEST=unit COVERALLS=1
-    - DEVICE=ios93 TEST=e2e/driver RECURSIVE=1 IWDP=1
-    - DEVICE=ios93 TEST=e2e/testapp RECURSIVE=1
-    - DEVICE=ios93 TEST=e2e/uicatalog RECURSIVE=1
+    # - DEVICE=ios93 TEST=unit COVERALLS=1
+    # - DEVICE=ios93 TEST=e2e/driver RECURSIVE=1 IWDP=1
+    # - DEVICE=ios93 TEST=e2e/testapp RECURSIVE=1
+    # - DEVICE=ios93 TEST=e2e/uicatalog RECURSIVE=1
     - DEVICE=ios93 TEST=e2e/safari RECURSIVE=1
 language: node_js
 os: osx

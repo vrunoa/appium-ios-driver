@@ -3,7 +3,7 @@ import { MOCHA_SAFARI_TIMEOUT } from '../helpers/session';
 import _ from 'lodash';
 
 
-describe('safari - logging', function () {
+describe.only('safari - logging', function () { // eslint-disable-line
   this.timeout(MOCHA_SAFARI_TIMEOUT);
 
   describe('default init', function () {
